@@ -1,0 +1,33 @@
+@import 'utils';
+
+.editor-template {
+  .panes {
+    height: calc(100vh - 4rem); // 페이지 높이에서 EditorHeader 크기 빼기
+    display: flex;
+    position: relative; // seperator 위치를 지정하려고 설정
+
+    .pane {
+      display: flex;
+      min-width: 0; // 내용이 커도 반대 영역을 침범하지 않음.
+      overflow: auto; // 너무 많으면 스크롤바
+    }
+
+    .separator {
+      width: 1rem;
+      height: 100%;
+      position: absolute;
+      transform: translate(-50%);
+      cursor: col-resize;
+    }
+
+    @include media("<medium") {
+      .editor {
+        flex: 1!important;
+      }
+
+      .preview, .separator {
+        display: none;
+      }
+    }
+  }
+}
