@@ -2,30 +2,49 @@ import React from 'react';
 import styles from './PostList.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
+import removeMd from 'remove-markdown';
 
 const cx = classNames.bind(styles);
 
-const PostItem = () => (
-  <div className={cx('post-item')}>
-    <h2><a>Title</a></h2>
-    <div className={cx('date')}>2017-10-24</div>
-    <p>Content</p>
-    <div className={cx('tags')}>
-      <a>#tag</a>
-      <a>#tag</a>
-      <a>#tag</a>
-      <a>#tag</a>
-    </div>
-  </div>
-);
+const PostItem = ({title, body, publishedDate, tags, id}) => {
+  const tagList = tags.map(
+    tag => <Link key={tag} to={`/tag/${tag}`}>#{tag}</Link>
+  );
 
-const PostList = () => (
-  <div className={cx('post-list')}>
-    <PostItem/>
-    <PostItem/>
-    <PostItem/>
-    <PostItem/>
-  </div>
-)
+  return (
+    <div className={cx('post-item')}>
+      <h2><Link to={`/post/${id}`} >{title}</Link></h2>
+      <div className={cx('date')}>{moment(publishedDate).format('ll')}</div>
+      <p>{removeMd(body)}</p>
+      <div className={cx('tags')}>
+        {tagList}
+      </div>
+    </div>
+  );
+};
+
+const PostList = ({posts}) => {
+  const postList = posts.map(
+    post => {
+      const { _id, title, body, publishedDate, tags } = post.toJS();
+      return (
+        <PostItem
+          title={title}
+          body={body}
+          tags={tags}
+          publishedDate={publishedDate}
+          key={_id}
+          id={_id} />
+      )
+    }
+  );
+
+  return (
+    <div className={cx('post-list')}>
+      {postList}
+    </div>
+  );
+}
 
 export default PostList;
