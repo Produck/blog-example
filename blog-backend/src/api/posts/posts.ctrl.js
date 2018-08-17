@@ -24,7 +24,8 @@ exports.write = async (ctx) => {
   const result = Joi.validate(ctx.request.body, schema);
 
   if (result.error) {
-    ctx.status = 4000;
+    console.log(result.error);
+    ctx.status = 400;
     return;
   }
 
