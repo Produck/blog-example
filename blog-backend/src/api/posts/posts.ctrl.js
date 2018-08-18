@@ -14,6 +14,15 @@ exports.checkObjectId = (ctx, next) => {
   return next();
 };
 
+exports.checkLogin = (ctx, next) => {
+  if (!ctx.session.logged) {
+    ctx.status = 401;
+    return null;
+  }
+
+  return next();
+};
+
 exports.write = async (ctx) => {
   const schema = Joi.object().keys({
     title: Joi.string().required(),
