@@ -6,19 +6,34 @@ import * as baseActions from 'store/modules/base';
 
 class FooterContainer extends Component {
   handleLoginClick = async () => {
-    const { BaseActions } = this.props;
+    const { BaseActions, logged } = this.props;
+    
+    if (logged) {
+      try {
+        await BaseActions.logout();
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
+      return;
+    }
+
     BaseActions.showModal('login');
+    BaseActions.initializeLoginModal();
   }
 
   render() {
     const { handleLoginClick } = this;
+    const { logged } = this.props;
 
-    return (<Footer onLoginClick={handleLoginClick}></Footer>);
+    return (<Footer onLoginClick={handleLoginClick} logged={logged}></Footer>);
   }
 }
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    logged: state.base.get('logged')
+  }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch)
   })

@@ -11,6 +11,7 @@ class LoginModalContainer extends Component {
     try {
       await BaseActions.login(password);
       BaseActions.hideModal('login');
+      localStorage.logged = 'true';
     } catch (e) {
       console.log(e);
     }
@@ -21,24 +22,29 @@ class LoginModalContainer extends Component {
     BaseActions.hideModal('login');
   }
 
-  handleChange = () => {
-
+  handleChange = (e) => {
+    const { value } = e.target;
+    const { BaseActions } = this.props;
+    BaseActions.changePasswordInput(value);
   }
 
   handleKeyPress = (e) => {
-
+    if (e.key === 'Enter') {
+      this.handleLogin();
+    }
   }
 
   render() {
     const {
       handleLogin, handleCancel, handleChange, handleKeyPress
     } = this;
-    const { visible } = this.props;
+    const { visible, error, password } = this.props;
 
     return (
       <LoginModal
         visible={visible}
-        onLogin={handleLogin} onCancel={handleCancel} onChange={handleChange} onKeyPress={handleKeyPress} />
+        onLogin={handleLogin} onCancel={handleCancel} onChange={handleChange} onKeyPress={handleKeyPress}
+        error={error} password={password} />
     );
   }
 }
@@ -46,7 +52,8 @@ class LoginModalContainer extends Component {
 export default connect(
   (state) => ({
     visible: state.base.getIn(['modal', 'login']),
-    password: state.base.getIn(['loginModal', 'password'])
+    password: state.base.getIn(['loginModal', 'password']),
+    error: state.base.getIn(['loginModal', 'error'])
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch)

@@ -1,4 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
+import * as api from 'lib/api';
 
 import { Map } from 'immutable';
 import { pender } from 'redux-pender';
@@ -11,15 +12,17 @@ const LOGOUT = 'base/LOGOUT';
 const CHECK_LOGIN = 'base/CHECK_LOGIN';
 const CHANGE_PASSWORD_INPUT = 'base/CHANGE_PASSWORD_INPUT';
 const INITALIZE_LOGIN_MODAL = 'base/INITAILIZE_LOGIN_MODAL';
+const TEMP_LOGIN = 'base/TEMP_LOGIN';
 
 export const showModal = createAction(SHOW_MODAL);
 export const hideModal = createAction(HIDE_MODAL);
 
-export const login = createAction(LOGIN);
-export const logout = createAction(LOGOUT);
-export const checkLogin = createAction(CHECK_LOGIN);
+export const login = createAction(LOGIN, api.login);
+export const logout = createAction(LOGOUT, api.logout);
+export const checkLogin = createAction(CHECK_LOGIN, api.checkLogin);
 export const changePasswordInput = createAction(CHANGE_PASSWORD_INPUT);
-export const initailizeLoginModal = createAction(INITALIZE_LOGIN_MODAL);
+export const initializeLoginModal = createAction(INITALIZE_LOGIN_MODAL);
+export const tempLogin = createAction(TEMP_LOGIN);
 
 const initialState = Map({
   modal: Map({
@@ -68,5 +71,8 @@ export default handleActions({
   },
   [INITALIZE_LOGIN_MODAL]: (state, action) => {
     return state.setIn(['loginModal'], initialState.get('loginModal'));
+  },
+  [TEMP_LOGIN]: (state, action) => {
+    return state.set('logged', true);
   }
 }, initialState);
